@@ -386,19 +386,37 @@ class GraphingEngine:
         for spine in self.ax.spines.values():
             spine.set_edgecolor(t["border"])
 
-        #for p in self.plots:
-            self.ax.plot(p["xs"], p["ys"], color=p["color"],
-                         linewidth=2, label=p["label"])
+        # Plot lines with markers (clean + visible)
+        for p in self.plots:
+            self.ax.plot(
+                p["xs"], p["ys"],
+                color=p["color"],
+                linewidth=2,
+                marker='o',
+                markevery=80,
+                label=p["label"]
+            )
 
-        self.ax.axhline(0, color=t["text_dim"], linewidth=0.8, linestyle="--")
-        self.ax.axvline(0, color=t["text_dim"], linewidth=0.8, linestyle="--")
-        self.ax.grid(True, color=t["border"], alpha=0.5, linestyle=":")
-        if self.plots:
-            legend = self.ax.legend(facecolor=t["surface2"],
-                                     edgecolor=t["border"],
-                                     labelcolor=fg, fontsize=9)
-        self.ax.set_xlabel("x", color=fg)
-        self.ax.set_ylabel("y", color=fg)
+        # Grid (modern dashed style)
+        self.ax.grid(True, linestyle='--', linewidth=0.5, color=t["border"])
+
+        # Axis lines (center cross)
+        self.ax.axhline(0, color=t["text"], linewidth=1)
+        self.ax.axvline(0, color=t["text"], linewidth=1)
+
+        # Axis labels
+        self.ax.set_xlabel("x", color=t["text"])
+        self.ax.set_ylabel("y", color=t["text"])
+
+        # Legend (fixed colors for dark UI)
+        legend = self.ax.legend(
+            facecolor=t["surface2"],
+            edgecolor=t["border"],
+            fontsize=9
+        )
+        for text in legend.get_texts():
+            text.set_color(fg)
+
         self.ax.set_title("Function Plot", color=fg, fontsize=11, pad=8)
         self.fig.tight_layout()
 
